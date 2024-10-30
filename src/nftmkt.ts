@@ -19,11 +19,6 @@ export function handleList(event: ListEvent): void {
   entity.blockTimestamp = event.block.timestamp;
   entity.transactionHash = event.transaction.hash;
 
-  let sellOrderInfo = OrderBook.load(event.params.orderId);
-  entity.filledTxHash = sellOrderInfo!.transactionHash;
-
-  let cancelOrderInfo = Cancel.load(event.params.orderId);
-  entity.cancelTxHash = cancelOrderInfo!.transactionHash;
   entity.save();
 }
 
@@ -36,6 +31,9 @@ export function handleSold(event: SoldEvent): void {
   entity.blockTimestamp = event.block.timestamp;
   entity.transactionHash = event.transaction.hash;
 
+  let sellOrderInfo = OrderBook.load(event.params.orderId);
+  sellOrderInfo!.filledTxHash = entity.transactionHash;
+
   entity.save();
 }
 
@@ -44,6 +42,9 @@ export function handleCancel(event: CancelEvent): void {
   entity.blockNumber = event.block.number;
   entity.blockTimestamp = event.block.timestamp;
   entity.transactionHash = event.transaction.hash;
+
+  let cancelOrderInfo = OrderBook.load(event.params.orderId);
+  cancelOrderInfo!.cancelTxHash = entity.transactionHash;
 
   entity.save();
 }
