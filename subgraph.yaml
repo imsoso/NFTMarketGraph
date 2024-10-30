@@ -16,12 +16,15 @@ dataSources:
       apiVersion: 0.0.7
       language: wasm/assemblyscript
       entities:
+        - Cancel
         - OrderBook
         - FilledOrder
       abis:
         - name: NFTMKT
           file: ./abis/NFTMKT.json
       eventHandlers:
+        - event: Cancel(bytes32)
+          handler: handleCancel
         - event: List(indexed address,indexed uint256,bytes32,address,address,uint256,uint256)
           handler: handleList
         - event: Sold(bytes32,address,uint256)

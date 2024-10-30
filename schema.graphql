@@ -22,3 +22,11 @@ type FilledOrder @entity(immutable: true) {
   # relation
   order: OrderBook
 }
+
+type Cancel @entity(immutable: true) {
+  id: Bytes!
+  orderId: Bytes! # bytes32
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}

@@ -1,9 +1,10 @@
 import { Entity } from "@graphprotocol/graph-ts";
 import {
+  Cancel as CancelEvent,
   List as ListEvent,
   Sold as SoldEvent,
 } from "../generated/NFTMKT/NFTMKT";
-import { OrderBook, FilledOrder } from "../generated/schema";
+import { Cancel, OrderBook, FilledOrder } from "../generated/schema";
 
 export function handleList(event: ListEvent): void {
   let entity = new OrderBook(
@@ -34,6 +35,15 @@ export function handleSold(event: SoldEvent): void {
   entity.buyer = event.params.buyer;
   entity.fee = event.params.fee;
 
+  entity.blockNumber = event.block.number;
+  entity.blockTimestamp = event.block.timestamp;
+  entity.transactionHash = event.transaction.hash;
+
+  entity.save();
+}
+
+export function handleCancel(event: CancelEvent): void {
+  let entity = new Cancel(event.params.orderId);
   entity.blockNumber = event.block.number;
   entity.blockTimestamp = event.block.timestamp;
   entity.transactionHash = event.transaction.hash;
