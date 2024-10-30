@@ -7,12 +7,9 @@ import {
 import { Cancel, OrderBook, FilledOrder } from "../generated/schema";
 
 export function handleList(event: ListEvent): void {
-  let entity = new OrderBook(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  );
+  let entity = new OrderBook(event.params.orderId);
   entity.nft = event.params.nft;
   entity.tokenId = event.params.tokenId;
-  // entity.orderId = event.params.orderId;
   entity.seller = event.params.seller;
   entity.payToken = event.params.payToken;
   entity.price = event.params.price;
@@ -22,16 +19,16 @@ export function handleList(event: ListEvent): void {
   entity.blockTimestamp = event.block.timestamp;
   entity.transactionHash = event.transaction.hash;
 
-  // entity.cancelTxHash = event.cancelTxHash;
-  // entity.filledTxHash = event.filledTxHash;
+  let sellOrderInfo = OrderBook.load(event.params.orderId);
+  entity.filledTxHash = sellOrderInfo!.transactionHash;
+
+  let cancelOrderInfo = Cancel.load(event.params.orderId);
+  entity.cancelTxHash = cancelOrderInfo!.transactionHash;
   entity.save();
 }
 
 export function handleSold(event: SoldEvent): void {
-  let entity = new FilledOrder(
-    event.transaction.hash.concatI32(event.logIndex.toI32())
-  );
-  // entity.orderId = event.params.orderId;
+  let entity = new FilledOrder(event.params.orderId);
   entity.buyer = event.params.buyer;
   entity.fee = event.params.fee;
 
