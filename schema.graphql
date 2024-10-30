@@ -1,8 +1,7 @@
-type List @entity(immutable: true) {
+type OrderBook @entity(immutable: true) {
   id: Bytes!
   nft: Bytes! # address
   tokenId: BigInt! # uint256
-  orderId: Bytes! # bytes32
   seller: Bytes! # address
   payToken: Bytes! # address
   price: BigInt! # uint256
@@ -10,14 +9,16 @@ type List @entity(immutable: true) {
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
+  cancelTxHash: Bytes!
+  filledTxHash: Bytes!
 }
-
-type Sold @entity(immutable: true) {
+type FilledOrder @entity(immutable: true) {
   id: Bytes!
-  orderId: Bytes! # bytes32
   buyer: Bytes! # address
   fee: BigInt! # uint256
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
+  # relation
+  order: OrderBook
 }

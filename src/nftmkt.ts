@@ -1,16 +1,17 @@
+import { Entity } from "@graphprotocol/graph-ts";
 import {
   List as ListEvent,
   Sold as SoldEvent,
 } from "../generated/NFTMKT/NFTMKT";
-import { List, Sold } from "../generated/schema";
+import { OrderBook, FilledOrder } from "../generated/schema";
 
 export function handleList(event: ListEvent): void {
-  let entity = new List(
+  let entity = new OrderBook(
     event.transaction.hash.concatI32(event.logIndex.toI32())
   );
   entity.nft = event.params.nft;
   entity.tokenId = event.params.tokenId;
-  entity.orderId = event.params.orderId;
+  // entity.orderId = event.params.orderId;
   entity.seller = event.params.seller;
   entity.payToken = event.params.payToken;
   entity.price = event.params.price;
@@ -20,14 +21,16 @@ export function handleList(event: ListEvent): void {
   entity.blockTimestamp = event.block.timestamp;
   entity.transactionHash = event.transaction.hash;
 
+  // entity.cancelTxHash = event.cancelTxHash;
+  // entity.filledTxHash = event.filledTxHash;
   entity.save();
 }
 
 export function handleSold(event: SoldEvent): void {
-  let entity = new Sold(
+  let entity = new FilledOrder(
     event.transaction.hash.concatI32(event.logIndex.toI32())
   );
-  entity.orderId = event.params.orderId;
+  // entity.orderId = event.params.orderId;
   entity.buyer = event.params.buyer;
   entity.fee = event.params.fee;
 
